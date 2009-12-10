@@ -9,8 +9,6 @@ use GSAPI qw();
 
 our $VERSION = '0.001';
 
-requires 'post_script_source_appendix';
-
 has '_gsapi_instance' => (is => 'ro', isa => 'GSAPI::instance', default => sub {return GSAPI::new_instance;},);
 
 has 'data'      => (is => 'rw', isa => 'Str',           required => 1,);
@@ -47,12 +45,33 @@ sub _build__alien_bwipp_class {
     return 'Alien::BWIPP::' . $self->_short_package_name;
 }
 
+sub _post_script_source_appendix {
+    my ($self) = @_;
+    my @own_attributes_with_value = grep {
+        $_->type_constraint->name =~ qr/\A PostScript::Barcode::Types/msx && $self ->${\$_->name}
+    } $self->meta->get_all_attributes;
+    my @bool_options = map {$_->name} grep {
+        $_->type_constraint->equals('PostScript::Barcode::Types::Bool')
+    } @own_attributes_with_value;
+    my @compound_options = map {$_->name . '=' . $self ->${\$_->name}} grep {
+        !$_->type_constraint->equals('PostScript::Barcode::Types::Bool')
+    } @own_attributes_with_value;
+
+    return sprintf "gsave %s %s %u %u moveto %s (%s) %s grestore showpage\n",
+        ($self->translate ? "@{$self->translate} translate" : q{}),
+        ($self->scale ? "@{$self->scale} scale" : q{}),
+        @{$self->move_to},
+        ($self->pack_data ? '<' . unpack('H*', $self->data) . '>' : '(' . $self->data . ')'),
+        "@bool_options @compound_options",
+        $self->_short_package_name;
+}
+
 sub post_script_source_code {
     my ($self) = @_;
     return
         $self->_post_script_source_header
       . $self->_alien_bwipp_class->new->post_script_source_code
-      . $self->post_script_source_appendix;
+      . $self->_post_script_source_appendix;
 }
 
 sub gsapi_init_options {

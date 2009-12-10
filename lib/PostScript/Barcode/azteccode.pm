@@ -10,26 +10,13 @@ with qw(PostScript::Barcode);
 
 our $VERSION = '0.001';
 
-has 'parse'      => (is => 'rw', isa => 'Bool',);
-has 'eclevel'    => (is => 'rw', isa => 'Num',);
-has 'ecaddchars' => (is => 'rw', isa => 'Num',);
-has 'layers'     => (is => 'rw', isa => 'Num',);
+has 'parse'      => (is => 'rw', isa => 'PostScript::Barcode::Types::Bool',);
+has 'eclevel'    => (is => 'rw', isa => 'PostScript::Barcode::Types::Num',);
+has 'ecaddchars' => (is => 'rw', isa => 'PostScript::Barcode::Types::Num',);
+has 'layers'     => (is => 'rw', isa => 'PostScript::Barcode::Types::Num',);
 has 'format'     => (is => 'rw', isa => 'PostScript::Barcode::Types::Enum::azteccode::format',);
-has 'readerinit' => (is => 'rw', isa => 'Bool',);
-has 'raw'        => (is => 'rw', isa => 'Bool',);
-
-sub post_script_source_appendix {
-    my ($self) = @_;
-    return sprintf "gsave %s %s %u %u moveto %s (%s) azteccode grestore showpage\n",
-        ($self->translate ? "@{$self->translate} translate" : q{}),
-        ($self->scale ? "@{$self->scale} scale" : q{}),
-        @{$self->move_to},
-        ($self->pack_data ? '<' . unpack('H*', $self->data) . '>' : '(' . $self->data . ')'),
-        (
-            (join q{}, map {"$_ "} grep {$self->$_} qw(parse readerinit raw))
-          . (join q{ }, map {$_ . '=' . $self->$_} grep {$self->$_} qw(eclevel ecaddchars layers format))
-        );
-}
+has 'readerinit' => (is => 'rw', isa => 'PostScript::Barcode::Types::Bool',);
+has 'raw'        => (is => 'rw', isa => 'PostScript::Barcode::Types::Bool',);
 
 sub BUILD {
     my ($self) = @_;

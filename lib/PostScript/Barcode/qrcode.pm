@@ -10,24 +10,11 @@ with qw(PostScript::Barcode);
 
 our $VERSION = '0.001';
 
-has 'parse'   => (is => 'rw', isa => 'Bool',);
+has 'parse'   => (is => 'rw', isa => 'PostScript::Barcode::Types::Bool',);
 has 'eclevel' => (is => 'rw', isa => 'PostScript::Barcode::Types::Enum::qrcode::eclevel',);
 has 'version' => (is => 'rw', isa => 'PostScript::Barcode::Types::Enum::qrcode::version',);
 has 'format'  => (is => 'rw', isa => 'PostScript::Barcode::Types::Enum::qrcode::format',);
-has 'raw'     => (is => 'rw', isa => 'Bool',);
-
-sub post_script_source_appendix {
-    my ($self) = @_;
-    return sprintf "gsave %s %s %u %u moveto %s (%s) qrcode grestore showpage\n",
-        ($self->translate ? "@{$self->translate} translate" : q{}),
-        ($self->scale ? "@{$self->scale} scale" : q{}),
-        @{$self->move_to},
-        ($self->pack_data ? '<' . unpack('H*', $self->data) . '>' : '(' . $self->data . ')'),
-        (
-            (join q{}, map {"$_ "} grep {$self->$_} qw(parse raw))
-          . (join q{ }, map {$_ . '=' . $self->$_} grep {$self->$_} qw(eclevel version format))
-        );
-}
+has 'raw'     => (is => 'rw', isa => 'PostScript::Barcode::Types::Bool',);
 
 sub BUILD {
     my ($self) = @_;

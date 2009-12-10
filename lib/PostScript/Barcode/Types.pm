@@ -3,7 +3,7 @@ use 5.010;
 use utf8;
 use strict;
 use warnings FATAL => 'all';
-use Moose::Util::TypeConstraints qw(enum);
+use Moose::Util::TypeConstraints qw(enum subtype as);
 
 our $VERSION = '0.001';
 
@@ -11,6 +11,8 @@ enum 'PostScript::Barcode::Types::Enum::azteccode::format' => qw(full compact ru
 enum 'PostScript::Barcode::Types::Enum::qrcode::eclevel'   => qw(L M Q H);
 enum 'PostScript::Barcode::Types::Enum::qrcode::version'   => (qw(M1 M2 M3 M4), 1 .. 40);
 enum 'PostScript::Barcode::Types::Enum::qrcode::format'    => qw(full micro);
+subtype 'PostScript::Barcode::Types::Bool'                 => as 'Bool';
+subtype 'PostScript::Barcode::Types::Num'                  => as 'Num';
 
 1;
 
