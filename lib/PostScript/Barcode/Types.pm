@@ -7,12 +7,13 @@ use Moose::Util::TypeConstraints qw(enum subtype as);
 
 our $VERSION = '0.001';
 
-enum 'PostScript::Barcode::Types::Enum::azteccode::format' => qw(full compact rune);
-enum 'PostScript::Barcode::Types::Enum::qrcode::eclevel'   => qw(L M Q H);
-enum 'PostScript::Barcode::Types::Enum::qrcode::version'   => (qw(M1 M2 M3 M4), 1 .. 40);
-enum 'PostScript::Barcode::Types::Enum::qrcode::format'    => qw(full micro);
-subtype 'PostScript::Barcode::Types::Bool'                 => as 'Bool';
-subtype 'PostScript::Barcode::Types::Num'                  => as 'Num';
+enum 'PostScript::Barcode::Types::Enum::azteccode::format'    => qw(full compact rune);
+enum 'PostScript::Barcode::Types::Enum::datamatrix::encoding' => qw(byte ascii edifact c40 text x12);
+enum 'PostScript::Barcode::Types::Enum::qrcode::eclevel'      => qw(L M Q H);
+enum 'PostScript::Barcode::Types::Enum::qrcode::version'      => (qw(M1 M2 M3 M4), 1 .. 40);
+enum 'PostScript::Barcode::Types::Enum::qrcode::format'       => qw(full micro);
+subtype 'PostScript::Barcode::Types::Bool'                    => as 'Bool';
+subtype 'PostScript::Barcode::Types::Num'                     => as 'Num';
 
 1;
 
