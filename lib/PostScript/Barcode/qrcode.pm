@@ -4,20 +4,16 @@ use utf8;
 use strict;
 use warnings FATAL => 'all';
 use Moose qw(with has);
-use Moose::Util::TypeConstraints qw(enum);
+use PostScript::Barcode::Types qw();
 
 with qw(PostScript::Barcode);
 
 our $VERSION = '0.001';
 
-enum 'Enum_qrcode_eclevel' => qw(L M Q H);
-enum 'Enum_qrcode_version' => (qw(M1 M2 M3 M4), 1..40);
-enum 'Enum_qrcode_format' => qw(full micro);
-
 has 'parse'   => (is => 'rw', isa => 'Bool',);
-has 'eclevel' => (is => 'rw', isa => 'Enum_qrcode_eclevel',);
-has 'version' => (is => 'rw', isa => 'Enum_qrcode_version',);
-has 'format'  => (is => 'rw', isa => 'Enum_qrcode_format',);
+has 'eclevel' => (is => 'rw', isa => 'PostScript::Barcode::Types::Enum::qrcode::eclevel',);
+has 'version' => (is => 'rw', isa => 'PostScript::Barcode::Types::Enum::qrcode::version',);
+has 'format'  => (is => 'rw', isa => 'PostScript::Barcode::Types::Enum::qrcode::format',);
 has 'raw'     => (is => 'rw', isa => 'Bool',);
 
 sub post_script_source_appendix {
@@ -100,9 +96,15 @@ Type C<Bool>
 
 =head3 C<eclevel>
 
+Type C<PostScript::Barcode::Types::Enum::qrcode::eclevel>
+
 =head3 C<version>
 
+Type C<PostScript::Barcode::Types::Enum::qrcode::version>
+
 =head3 C<format>
+
+Type C<PostScript::Barcode::Types::Enum::qrcode::format>
 
 =head3 C<raw>
 

@@ -4,19 +4,17 @@ use utf8;
 use strict;
 use warnings FATAL => 'all';
 use Moose qw(with has);
-use Moose::Util::TypeConstraints qw(enum);
+use PostScript::Barcode::Types qw();
 
 with qw(PostScript::Barcode);
 
 our $VERSION = '0.001';
 
-enum 'Enum_azteccode_format' => qw(full compact rune);
-
 has 'parse'      => (is => 'rw', isa => 'Bool',);
 has 'eclevel'    => (is => 'rw', isa => 'Num',);
 has 'ecaddchars' => (is => 'rw', isa => 'Num',);
 has 'layers'     => (is => 'rw', isa => 'Num',);
-has 'format'     => (is => 'rw', isa => 'Enum_azteccode_format',);
+has 'format'     => (is => 'rw', isa => 'PostScript::Barcode::Types::Enum::azteccode::format',);
 has 'readerinit' => (is => 'rw', isa => 'Bool',);
 has 'raw'        => (is => 'rw', isa => 'Bool',);
 
@@ -140,6 +138,8 @@ Type C<Num>
 Type C<Num>
 
 =head3 C<format>
+
+Type C<PostScript::Barcode::Types::Enum::azteccode::format>
 
 =head3 C<readerinit>
 
