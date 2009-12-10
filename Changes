@@ -2,6 +2,16 @@
 
 =head1 Revision history for PostScript-Barcode
 
+=head2 0.002  2009-12-10
+
+=over
+
+=item add Aztec Code, Data Matrix
+
+=item renders to correct image sizes
+
+=back
+
 =head2 0.001  2009-12-07
 
 Initial release.

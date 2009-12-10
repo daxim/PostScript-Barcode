@@ -7,7 +7,7 @@ use Alien::BWIPP;
 use Moose::Role qw(requires has);
 use GSAPI qw();
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 has '_gsapi_instance' => (is => 'ro', isa => 'GSAPI::instance', default => sub {return GSAPI::new_instance;},);
 
@@ -136,7 +136,7 @@ PostScript::Barcode - barcode writer
 
 =head1 VERSION
 
-This document describes C<PostScript::Barcode> version C<0.001>.
+This document describes C<PostScript::Barcode> version C<0.002>.
 
 
 =head1 SYNOPSIS
