@@ -22,6 +22,7 @@ has 'scale'     => (is => 'rw', isa => 'ArrayRef[Num]',);
 has '_post_script_source_bounding_box' => (is => 'rw', isa => 'Str',       lazy_build => 1,);
 has 'bounding_box'                     => (is => 'rw', isa => 'ArrayRef[Num]',);
 has '_post_script_source_header'       => (is => 'rw', isa => 'Str',       lazy_build => 1,);
+has '_short_package_name'              => (is => 'ro', isa => 'Str',       lazy_build => 1,);
 has '_alien_bwipp_class'               => (is => 'ro', isa => 'ClassName', lazy_build => 1,);
 
 sub _build__post_script_source_header {
@@ -34,11 +35,16 @@ sub _build__post_script_source_bounding_box {
     return "%%BoundingBox: @{$self->bounding_box}\n";
 }
 
-sub _build__alien_bwipp_class {
+sub _build__short_package_name {
     my ($self) = @_;
     my $package_name = $self->meta->name;
-    $package_name =~ s{\A .* ::}{}msx;    # keep last part
-    return "Alien::BWIPP::$package_name";
+    $package_name =~ s{\A .* (?:'|::)}{}msx;    # keep last part
+    return $package_name;
+}
+
+sub _build__alien_bwipp_class {
+    my ($self) = @_;
+    return 'Alien::BWIPP::' . $self->_short_package_name;
 }
 
 sub post_script_source_code {
