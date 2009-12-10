@@ -1,11 +1,15 @@
 #!perl -T
 use strict;
 use warnings FATAL   => 'all';
-use Test::More tests => 1;
+use Test::More tests => 4;
 
 BEGIN {
-    for my $module (qw(PostScript::Barcode)) {
+    for my $module (qw(
+        PostScript::Barcode
+        PostScript::Barcode::Types
+        PostScript::Barcode::azteccode
+        PostScript::Barcode::qrcode
+    )) {
         use_ok($module) or BAIL_OUT("could not load $module, cannot continue");
-        diag("Testing $module " . $module->VERSION);
     }
 }
