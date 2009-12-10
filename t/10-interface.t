@@ -20,9 +20,7 @@ for my $module (keys %test_data) {
     my ($stdout) = capture {
         $barcode->render;
     };
-
-    TODO: {
-        local $TODO = 'bounding box works on command-line, but not by API';
-        is_deeply [imgsize(\$stdout)], [$test_data{$module}{size}], 'image size';
-    }
+    my @imgsize = imgsize(\$stdout);
+    pop @imgsize;
+    is_deeply [@imgsize], $test_data{$module}{size}, 'image size';
 }

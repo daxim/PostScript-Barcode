@@ -83,7 +83,8 @@ sub gsapi_init_options {
         -sDEVICE            => 'pngalpha',
         -sOutputFile        => '-',
     );
-    my %boolean_defaults = map {$_ => 1} qw(-dBATCH -dEPSCrop -dNOPAUSE -dQUIET -dSAFER);
+    my %boolean_defaults = map {$_ => 1} qw(-dBATCH -dEPSCrop -dNOPAUSE -dQUIET -dSAFER),
+        sprintf('-g%ux%u', $self->bounding_box->[-2], $self->bounding_box->[-1]);
 
     for my $option (keys %defaults) {
         $params{$option} = $defaults{$option} unless exists $params{$option};
@@ -191,9 +192,10 @@ Returns EPS source code of the barcode as string.
 
 Takes a hash of initialisation options, see L<GSAPI/"init_with_args"> and
 L<http://ghostscript.com/doc/current/Use.htm#Invoking>. Default is
-C<qw(-dBATCH -dEPSCrop -dNOPAUSE -dQUIET -dSAFER -dGraphicsAlphaBits=4
--dTextAlphaBits=4 -sDEVICE=pngalpha -sOutputFile=-)>, meaning the barcode is
-rendered as transparent PNG with anti-aliasing to STDOUT.
+C<< qw(-dBATCH -dEPSCrop -dNOPAUSE -dQUIET -dSAFER -gI<x>xI<y>
+-dGraphicsAlphaBits=4 -dTextAlphaBits=4 -sDEVICE=pngalpha -sOutputFile=-) >>,
+meaning the barcode is rendered as transparent PNG with anti-aliasing to
+STDOUT, with the image size automatically taken from the L</"bounding_box">.
 
 
 =head1 EXPORTS
