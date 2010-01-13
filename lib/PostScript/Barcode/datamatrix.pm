@@ -19,7 +19,7 @@ has 'raw'      => (is => 'rw', isa => 'PostScript::Barcode::Types::Bool',);
 sub BUILD {
     my ($self) = @_;
     my %metrics = (
-        1    => 15,
+        0    => 15,
         2    => 18,
         4    => 21,
         7    => 24,
@@ -46,7 +46,7 @@ sub BUILD {
     );
 
     unless ($self->bounding_box) {
-        my $size;
+        my $size = $metrics{0};
         my @order = sort {$a <=> $b} keys %metrics;
         for my $data_length (@order) {
             last if $data_length > length $self->data;
