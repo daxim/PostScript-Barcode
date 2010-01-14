@@ -4,12 +4,14 @@ use utf8;
 use strict;
 use warnings FATAL => 'all';
 use Alien::BWIPP;
+use Devel::Refcount qw();
 use Moose::Role qw(requires has);
 use GSAPI qw();
 
 our $VERSION = '0.002';
 
-has '_gsapi_instance' => (is => 'ro', isa => 'GSAPI::instance', default => sub {return GSAPI::new_instance;},);
+my $singleton_gsapi_instance = GSAPI::new_instance;
+has '_gsapi_instance' => (is => 'ro', isa => 'Ref', default => sub {return \$singleton_gsapi_instance;},);
 
 has 'data'      => (is => 'rw', isa => 'Str',           required => 1,);
 has 'pack_data' => (is => 'rw', isa => 'Bool',          default  => 1,);
@@ -109,17 +111,19 @@ sub render {
     my ($self, %params) = @_;
 
     GSAPI::init_with_args(
-        $self->_gsapi_instance, $self->meta->name, $self->gsapi_init_options(%params),
+        ${$self->_gsapi_instance}, $self->meta->name, $self->gsapi_init_options(%params),
     );
 
-    GSAPI::run_string($self->_gsapi_instance, $self->post_script_source_code);
+    GSAPI::run_string(${$self->_gsapi_instance}, $self->post_script_source_code);
     return;
 }
 
 sub DEMOLISH {
     my ($self) = @_;
-    GSAPI::exit($self->_gsapi_instance);
-    GSAPI::delete_instance($self->_gsapi_instance);
+    if (3 == Devel::Refcount::refcount(${$self->_gsapi_instance})) {
+        GSAPI::exit(${$self->_gsapi_instance});
+        GSAPI::delete_instance(${$self->_gsapi_instance});
+    }
     return;
 }
 

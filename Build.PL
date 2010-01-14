@@ -24,10 +24,11 @@ my $build = Module::Build->new(
         'Test::More'      => 0,
     },
     requires => {
-        'perl'         => '5.010',
-        'Alien::BWIPP' => '0.001',
-        'GSAPI'        => '0.5',
-        'Moose'        => '0.93',
+        'perl'            => '5.010',
+        'Alien::BWIPP'    => '0.001',
+        'Devel::Refcount' => '0.06',
+        'GSAPI'           => '0.5',
+        'Moose'           => '0.93',
     },
 );
 $build->create_build_script;
