@@ -4,6 +4,11 @@
 
 Changes - Revision history for PostScript-Barcode
 
+=head2 0.003  2010-01-14
+
+bugfixes for calling constructors of classes multiple times in the same scope
+and for empty data in the constructor (thanks, Jozef Kutej)
+
 =head2 0.002  2009-12-10
 
 =over

@@ -8,7 +8,7 @@ use PostScript::Barcode::Types qw();
 
 with qw(PostScript::Barcode);
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 has 'parse'    => (is => 'rw', isa => 'PostScript::Barcode::Types::Bool',);
 has 'encoding' => (is => 'rw', isa => 'PostScript::Barcode::Types::Enum::datamatrix::encoding',);
@@ -74,7 +74,7 @@ PostScript::Barcode::datamatrix - Data Matrix
 
 =head1 VERSION
 
-This document describes C<PostScript::Barcode::datamatrix> version C<0.002>.
+This document describes C<PostScript::Barcode::datamatrix> version C<0.003>.
 
 
 =head1 SYNOPSIS

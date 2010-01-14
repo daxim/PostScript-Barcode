@@ -8,7 +8,7 @@ use Devel::Refcount qw();
 use Moose::Role qw(requires has);
 use GSAPI qw();
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 my $singleton_gsapi_instance = GSAPI::new_instance;
 has '_gsapi_instance' => (is => 'ro', isa => 'Ref', default => sub {return \$singleton_gsapi_instance;},);
@@ -140,7 +140,7 @@ PostScript::Barcode - barcode writer
 
 =head1 VERSION
 
-This document describes C<PostScript::Barcode> version C<0.002>.
+This document describes C<PostScript::Barcode> version C<0.003>.
 
 
 =head1 SYNOPSIS
