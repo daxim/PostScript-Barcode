@@ -4,9 +4,9 @@ use warnings FATAL => 'all';
 
 use Module::Build;
 my $build = Module::Build->new(
-    license            => 'perl',
-    module_name        => 'PostScript::Barcode',
-    meta_merge => {
+    license     => 'perl',
+    module_name => 'PostScript::Barcode',
+    meta_merge  => {
         resources => {
             repository => 'http://github.com/daxim/PostScript-Barcode',
             bugtracker => 'http://github.com/daxim/PostScript-Barcode/issues',
@@ -16,7 +16,7 @@ my $build = Module::Build->new(
         'perl'          => '5.010',
         'Module::Build' => '0.35',
     },
-    build_requires     => {
+    build_requires => {
         'Capture::Tiny'   => 0,
         'Image::Size'     => 0,
         'Module::Load'    => 0,
@@ -24,11 +24,11 @@ my $build = Module::Build->new(
         'Test::More'      => 0,
     },
     requires => {
-        'perl'            => '5.010',
-        'Alien::BWIPP'    => '0.001',
-        'Devel::Refcount' => '0.06',
-        'GSAPI'           => '0.5',
-        'Moose'           => '0.93',
+        'perl'              => '5.010',
+        'Alien::BWIPP'      => '0.001',
+        'GSAPI'             => '0.5',
+        'Moose'             => '0.93',
+        'MooseX::Singleton' => '0.22',
     },
 );
 $build->create_build_script;

@@ -41,7 +41,8 @@ Perl 5.10
 
 =head3 CPAN modules
 
-L<Alien::BWIPP>, L<GSAPI>, L<Moose>, L<Moose::Role>, L<Moose::Util::TypeConstraints>
+L<Alien::BWIPP>, L<GSAPI>, L<Moose>, L<Moose::Role>,
+L<Moose::Util::TypeConstraints>, L<MooseX::Singleton>
 
 =head2 Build and test time
 
