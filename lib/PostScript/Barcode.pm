@@ -76,42 +76,88 @@ sub post_script_source_code {
       . $self->_post_script_source_appendix;
 }
 
+sub _atomise_optlist {
+    my ($self, @option_list) = @_;
+    my $option_name = qr/\A -\w/msx;
+    my @atoms;
+    while (@option_list) {
+        my $particle = pop @option_list;
+        # maybe boolean option, maybe option value
+        if (defined && /$option_name/msx) {
+            unshift @atoms, [$particle];
+        } else {
+            my $option_key = pop @option_list;
+            unshift @atoms, [$option_key => $particle];
+        }
+    }
+    return @atoms;
+}
+
 sub gsapi_init_options {
-    my ($self, %params) = @_;
+    my ($self, @params) = @_;
+
+    my $option_is_boolean = 1;
+    my $option_without_equal_sign = qr/\A -g/msx;
 
     my %defaults = (
+        -dBATCH             => \$option_is_boolean,
+        -dEPSCrop           => \$option_is_boolean,
+        -dNOPAUSE           => \$option_is_boolean,
+        -dQUIET             => \$option_is_boolean,
+        -dSAFER             => \$option_is_boolean,
         -dGraphicsAlphaBits => 4,
         -dTextAlphaBits     => 4,
         -sDEVICE            => 'pngalpha',
         -sOutputFile        => '-',
+        sprintf('-g%ux%u', $self->bounding_box->[-2], $self->bounding_box->[-1]) => \$option_is_boolean,
     );
-    my %boolean_defaults = map {$_ => 1} qw(-dBATCH -dEPSCrop -dNOPAUSE -dQUIET -dSAFER),
-        sprintf('-g%ux%u', $self->bounding_box->[-2], $self->bounding_box->[-1]);
 
-    for my $option (keys %defaults) {
-        $params{$option} = $defaults{$option} unless exists $params{$option};
-    }
-
-    my @gsapi_init_options;
-
-    for my $option (keys %boolean_defaults) {
-        unless (exists $params{$option} && !defined $params{$option}) {
-            push @gsapi_init_options, $option;
+    # overwrite defaults with user supplied optlist
+    for my $atom ($self->_atomise_optlist(@params)) {
+        if (exists $defaults{$atom->[0]}) {
+            if (2 == @{ $atom }) {
+                if (defined $atom->[1]) {
+                    $defaults{$atom->[0]} = $atom->[1];
+                } else {
+                    $defaults{$atom->[0]} = undef; # option to be dropped
+                }
+            }
+        } elsif ($atom->[0] =~ /$option_without_equal_sign/msx) {
+            delete @defaults{grep {/$option_without_equal_sign/msx} keys %defaults};
+            if (2 == @{ $atom }) {
+                if (defined $atom->[1]) {
+                    $defaults{$atom->[0] . $atom->[1]} = \$option_is_boolean;
+                }
+            } else {
+                $defaults{$atom->[0]} = \$option_is_boolean;
+            }
+        } else {
+            if (2 == @{ $atom }) {
+                $defaults{$atom->[0]} = $atom->[1];
+            } else {
+                $defaults{$atom->[0]} = \$option_is_boolean;
+            }
         }
     }
 
-    for my $option (keys %params) {
-        push @gsapi_init_options, $option . '=' . $params{$option};
+    my @gsapi_init_options;
+    for my $optname (keys %defaults) {
+        if (ref $defaults{$optname} && $option_is_boolean == ${ $defaults{$optname} }) {
+            push @gsapi_init_options, $optname;
+        } else {
+            if (defined $defaults{$optname}) {
+                push @gsapi_init_options, "$optname=$defaults{$optname}";
+            }
+        }
     }
-
     return @gsapi_init_options;
 }
 
 sub render {
-    my ($self, %params) = @_;
+    my ($self, @params) = @_;
 
     GSAPI::init_with_args(
-        ${$self->_gsapi_instance}, $self->meta->name, $self->gsapi_init_options(%params),
+        ${$self->_gsapi_instance}, $self->meta->name, $self->gsapi_init_options(@params),
     );
 
     GSAPI::run_string(${$self->_gsapi_instance}, $self->post_script_source_code);
@@ -192,12 +238,41 @@ Returns EPS source code of the barcode as string.
 
 =head3 C<render>
 
+    $barcode->render;
+      # use defaults, see below
     $barcode->render(-sDEVICE => 'pnggray', -sOutputFile => 'out.png',);
+      # overrides some default values
+    $barcode->render(-dEPSCrop => undef, -g => undef,);
+      # disables some default values
 
-Takes a hash of initialisation options, see L<GSAPI/"init_with_args"> and
-L<http://ghostscript.com/doc/current/Use.htm#Invoking>. Default is
-C<< qw(-dBATCH -dEPSCrop -dNOPAUSE -dQUIET -dSAFER -gI<x>xI<y>
--dGraphicsAlphaBits=4 -dTextAlphaBits=4 -sDEVICE=pngalpha -sOutputFile=-) >>,
+Takes an list of initialisation arguments. The argument names start with a
+dash, see the explanation at L<GSAPI/"init_with_args"> and
+L<http://ghostscript.com/doc/current/Use.htm#Invoking>. Renders and writes
+the barcode image binary data to the specified file name.
+
+=head4 options list atoms
+
+=over
+
+=item
+
+a pair of C<Str> and C<Value> which results in a C<-key=value> option
+
+=item
+
+a pair of C<Str> and C<Undef> which disables a boolean option that
+was enabled by default by this module
+
+=item
+
+a C<Str> which enables a boolean option.
+
+=back
+
+=head4 options defaults
+
+C<qw(-dBATCH -dEPSCrop -dNOPAUSE -dQUIET -dSAFER -g>I<XXX>C<x>I<YYY>
+C<-dGraphicsAlphaBits=4 -dTextAlphaBits=4 -sDEVICE=pngalpha -sOutputFile=-)>,
 meaning the barcode is rendered as transparent PNG with anti-aliasing to
 STDOUT, with the image size automatically taken from the L</"bounding_box">.
 
@@ -254,8 +329,6 @@ or send an email to the maintainer.
 =over
 
 =item add classes for the other barcodes
-
-=item rework GSAPI init options passing
 
 =back
 
