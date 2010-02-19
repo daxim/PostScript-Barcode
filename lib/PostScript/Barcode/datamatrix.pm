@@ -52,11 +52,10 @@ sub BUILD {
             last if $data_length > length $self->data;
             $size = $metrics{$data_length};
         }
-        $self->bounding_box([
-                0, 0,
+        $self->bounding_box([[0, 0], [
                 $size * ($self->scale ? $self->scale->[0] : 1) + ($self->translate ? $self->translate->[0] : 0),
                 $size * ($self->scale ? $self->scale->[1] : 1) + ($self->translate ? $self->translate->[1] : 0),
-        ]);
+        ]]);
     }
     return;
 }

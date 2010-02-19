@@ -3,7 +3,7 @@ use 5.010;
 use utf8;
 use strict;
 use warnings FATAL => 'all';
-use Moose::Util::TypeConstraints qw(enum subtype as);
+use Moose::Util::TypeConstraints qw(enum subtype as where);
 
 our $VERSION = '0.003';
 
@@ -14,6 +14,8 @@ enum 'PostScript::Barcode::Meta::Types::Enum::qrcode::version'      => (qw(M1 M2
 enum 'PostScript::Barcode::Meta::Types::Enum::qrcode::format'       => qw(full micro);
 subtype 'PostScript::Barcode::Meta::Types::Bool'                    => as 'Bool';
 subtype 'PostScript::Barcode::Meta::Types::Num'                     => as 'Num';
+subtype 'PostScript::Barcode::Meta::Types::Tuple'                   => as 'ArrayRef[Num]' => where {2 == @{$_}};
+subtype 'PostScript::Barcode::Meta::Types::TuplePair' => as 'ArrayRef[PostScript::Barcode::Meta::Types::Tuple]' => where {2 == @{$_}};
 
 1;
 
@@ -55,3 +57,12 @@ Type C<Enum>: C<qw(M1 M2 M3 M4), 1 .. 40>
 =head2 PostScript::Barcode::Meta::Types::Enum::qrcode::format
 
 Type C<Enum>: C<qw(full micro)>
+
+=head2 PostScript::Barcode::Meta::Types::Tuple
+
+Type C<ArrayRef[Num]> with exactly two elements
+
+=head2 PostScript::Barcode::Meta::Types::TuplePair
+
+Type C<ArrayRef[PostScript::Barcode::Meta::Types::Tuple]> with exactly two
+elements

@@ -17,12 +17,12 @@ has '_gsapi_instance' => (
 
 has 'data'      => (is => 'rw', isa => 'Str',           required => 1,);
 has 'pack_data' => (is => 'rw', isa => 'Bool',          default  => 1,);
-has 'move_to'   => (is => 'rw', isa => 'ArrayRef[Num]', default  => sub {return [0, 0];},);
-has 'translate' => (is => 'rw', isa => 'ArrayRef[Num]',);
-has 'scale'     => (is => 'rw', isa => 'ArrayRef[Num]',);
+has 'move_to'   => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Tuple', default  => sub {return [0, 0];},);
+has 'translate' => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Tuple',);
+has 'scale'     => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Tuple',);
 
 has '_post_script_source_bounding_box' => (is => 'rw', isa => 'Str',       lazy_build => 1,);
-has 'bounding_box'                     => (is => 'rw', isa => 'ArrayRef[Num]',);
+has 'bounding_box'                     => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::TuplePair',);
 has '_post_script_source_header'       => (is => 'rw', isa => 'Str',       lazy_build => 1,);
 has '_short_package_name'              => (is => 'ro', isa => 'Str',       lazy_build => 1,);
 has '_alien_bwipp_class'               => (is => 'ro', isa => 'ClassName', lazy_build => 1,);
@@ -34,7 +34,11 @@ sub _build__post_script_source_header {
 
 sub _build__post_script_source_bounding_box {
     my ($self) = @_;
-    return "%%BoundingBox: @{$self->bounding_box}\n";
+    return sprintf "%%%%BoundingBox: %u %u %u %u\n",
+        $self->bounding_box->[0][0],
+        $self->bounding_box->[0][1],
+        $self->bounding_box->[1][0],
+        $self->bounding_box->[1][1];
 }
 
 sub _build__short_package_name {
@@ -52,12 +56,12 @@ sub _build__alien_bwipp_class {
 sub _post_script_source_appendix {
     my ($self) = @_;
     my @own_attributes_with_value = grep {
-        $_->type_constraint->name =~ qr/\A PostScript::Barcode::Meta::Types/msx && $self ->${\$_->name}
+        $_->definition_context->{'package'} eq $self->meta->name && $_->has_value($self)
     } $self->meta->get_all_attributes;
     my @bool_options = map {$_->name} grep {
         $_->type_constraint->equals('PostScript::Barcode::Meta::Types::Bool')
     } @own_attributes_with_value;
-    my @compound_options = map {$_->name . '=' . $self ->${\$_->name}} grep {
+    my @compound_options = map {$_->name . '=' . $_->get_value($self)} grep {
         !$_->type_constraint->equals('PostScript::Barcode::Meta::Types::Bool')
     } @own_attributes_with_value;
 
@@ -111,7 +115,10 @@ sub gsapi_init_options {
         -dTextAlphaBits     => 4,
         -sDEVICE            => 'pngalpha',
         -sOutputFile        => '-',
-        sprintf('-g%ux%u', $self->bounding_box->[-2], $self->bounding_box->[-1]) => \$option_is_boolean,
+        sprintf('-g%ux%u',
+            $self->bounding_box->[1][0] - $self->bounding_box->[0][0],
+            $self->bounding_box->[1][1] - $self->bounding_box->[0][1]
+        )                   => \$option_is_boolean,
     );
 
     # overwrite defaults with user supplied optlist
@@ -208,20 +215,24 @@ is true.
 
 =head3 C<move_to>
 
-Type C<ArrayRef[Num]>, position where the barcode is placed initially.
-Default is C<[0, 0]>, which is the lower left hand of a document.
+Type C<PostScript::Barcode::Meta::Types::Tuple>, position where the barcode is
+placed initially. Default is C<[0, 0]>, which is the lower left hand of a
+document.
 
 =head3 C<translate>
 
-Type C<ArrayRef[Num]>, vector by which the barcode position is shifted.
+Type C<PostScript::Barcode::Meta::Types::Tuple>, vector by which the barcode
+position is shifted.
 
 =head3 C<scale>
 
-Type C<ArrayRef[Num]>, vector by which the barcode is resized.
+Type C<PostScript::Barcode::Meta::Types::Tuple>, vector by which the barcode is
+resized.
 
 =head3 C<bounding_box>
 
-Type C<ArrayRef[Num]>, coordinates of the EPS document bounding box.
+Type C<PostScript::Barcode::Meta::Types::TuplePair>, coordinates of the EPS
+document bounding box.
 
 =head2 Methods
 
@@ -305,7 +316,7 @@ L<Alien::BWIPP>, L<GSAPI>, L<Moose>, L<Moose::Role>, L<Moose::Util::TypeConstrai
 
 =head1 INCOMPATIBILITIES
 
-None reported.
+After version C<0.003> the type constraint for L</"bounding_box"> changed.
 
 
 =head1 BUGS AND LIMITATIONS
