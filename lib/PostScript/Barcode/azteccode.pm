@@ -4,19 +4,19 @@ use utf8;
 use strict;
 use warnings FATAL => 'all';
 use Moose qw(with has);
-use PostScript::Barcode::Types qw();
+use PostScript::Barcode::Meta::Types qw();
 
 with qw(PostScript::Barcode);
 
 our $VERSION = '0.003';
 
-has 'parse'      => (is => 'rw', isa => 'PostScript::Barcode::Types::Bool',);
-has 'eclevel'    => (is => 'rw', isa => 'PostScript::Barcode::Types::Num',);
-has 'ecaddchars' => (is => 'rw', isa => 'PostScript::Barcode::Types::Num',);
-has 'layers'     => (is => 'rw', isa => 'PostScript::Barcode::Types::Num',);
-has 'format'     => (is => 'rw', isa => 'PostScript::Barcode::Types::Enum::azteccode::format',);
-has 'readerinit' => (is => 'rw', isa => 'PostScript::Barcode::Types::Bool',);
-has 'raw'        => (is => 'rw', isa => 'PostScript::Barcode::Types::Bool',);
+has 'parse'      => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Bool',);
+has 'eclevel'    => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Num',);
+has 'ecaddchars' => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Num',);
+has 'layers'     => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Num',);
+has 'format'     => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Enum::azteccode::format',);
+has 'readerinit' => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Bool',);
+has 'raw'        => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Bool',);
 
 sub BUILD {
     my ($self) = @_;
@@ -126,7 +126,7 @@ Type C<Num>
 
 =head3 C<format>
 
-Type C<PostScript::Barcode::Types::Enum::azteccode::format>
+Type C<PostScript::Barcode::Meta::Types::Enum::azteccode::format>
 
 =head3 C<readerinit>
 

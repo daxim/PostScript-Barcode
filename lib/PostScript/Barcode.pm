@@ -50,13 +50,13 @@ sub _build__alien_bwipp_class {
 sub _post_script_source_appendix {
     my ($self) = @_;
     my @own_attributes_with_value = grep {
-        $_->type_constraint->name =~ qr/\A PostScript::Barcode::Types/msx && $self ->${\$_->name}
+        $_->type_constraint->name =~ qr/\A PostScript::Barcode::Meta::Types/msx && $self ->${\$_->name}
     } $self->meta->get_all_attributes;
     my @bool_options = map {$_->name} grep {
-        $_->type_constraint->equals('PostScript::Barcode::Types::Bool')
+        $_->type_constraint->equals('PostScript::Barcode::Meta::Types::Bool')
     } @own_attributes_with_value;
     my @compound_options = map {$_->name . '=' . $self ->${\$_->name}} grep {
-        !$_->type_constraint->equals('PostScript::Barcode::Types::Bool')
+        !$_->type_constraint->equals('PostScript::Barcode::Meta::Types::Bool')
     } @own_attributes_with_value;
 
     return sprintf "gsave %s %s %u %u moveto %s (%s) %s grestore showpage\n",

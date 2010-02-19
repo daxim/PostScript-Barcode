@@ -6,7 +6,7 @@ use Test::More tests => 4;
 BEGIN {
     for my $module (qw(
         PostScript::Barcode
-        PostScript::Barcode::Types
+        PostScript::Barcode::Meta::Types
         PostScript::Barcode::azteccode
         PostScript::Barcode::qrcode
     )) {

@@ -4,17 +4,17 @@ use utf8;
 use strict;
 use warnings FATAL => 'all';
 use Moose qw(with has);
-use PostScript::Barcode::Types qw();
+use PostScript::Barcode::Meta::Types qw();
 
 with qw(PostScript::Barcode);
 
 our $VERSION = '0.003';
 
-has 'parse'   => (is => 'rw', isa => 'PostScript::Barcode::Types::Bool',);
-has 'eclevel' => (is => 'rw', isa => 'PostScript::Barcode::Types::Enum::qrcode::eclevel',);
-has 'version' => (is => 'rw', isa => 'PostScript::Barcode::Types::Enum::qrcode::version',);
-has 'format'  => (is => 'rw', isa => 'PostScript::Barcode::Types::Enum::qrcode::format',);
-has 'raw'     => (is => 'rw', isa => 'PostScript::Barcode::Types::Bool',);
+has 'parse'   => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Bool',);
+has 'eclevel' => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Enum::qrcode::eclevel',);
+has 'version' => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Enum::qrcode::version',);
+has 'format'  => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Enum::qrcode::format',);
+has 'raw'     => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Bool',);
 
 sub BUILD {
     my ($self) = @_;
@@ -83,15 +83,15 @@ Type C<Bool>
 
 =head3 C<eclevel>
 
-Type C<PostScript::Barcode::Types::Enum::qrcode::eclevel>
+Type C<PostScript::Barcode::Meta::Types::Enum::qrcode::eclevel>
 
 =head3 C<version>
 
-Type C<PostScript::Barcode::Types::Enum::qrcode::version>
+Type C<PostScript::Barcode::Meta::Types::Enum::qrcode::version>
 
 =head3 C<format>
 
-Type C<PostScript::Barcode::Types::Enum::qrcode::format>
+Type C<PostScript::Barcode::Meta::Types::Enum::qrcode::format>
 
 =head3 C<raw>
 
