@@ -18,7 +18,10 @@ my $build = Module::Build->new(
     },
     build_requires => {
         'Capture::Tiny'   => 0,
+        'File::Temp'      => 0,
         'Image::Size'     => 0,
+        'IO::File'        => 0,
+        'GTop'            => 0,
         'Module::Load'    => 0,
         'Test::Exception' => 0,
         'Test::More'      => 0,

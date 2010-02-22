@@ -170,6 +170,7 @@ sub render {
     );
 
     GSAPI::run_string($self->_gsapi_instance->handle, $self->post_script_source_code);
+    GSAPI::exit($self->_gsapi_instance->handle);
     return;
 }
 

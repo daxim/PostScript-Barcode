@@ -19,7 +19,6 @@ has 'handle' => (
 
 sub DEMOLISH {
     my ($self) = @_;
-    GSAPI::exit($self->handle);
     GSAPI::delete_instance($self->handle);
     return;
 }
