@@ -4,6 +4,7 @@ use utf8;
 use strict;
 use warnings FATAL => 'all';
 use Alien::BWIPP;
+use Capture::Tiny qw(capture);
 use PostScript::Barcode::GSAPI::Singleton qw();
 use Moose::Role qw(requires has);
 
@@ -34,11 +35,21 @@ sub _build__post_script_source_header {
 
 sub _build__post_script_source_bounding_box {
     my ($self) = @_;
-    return sprintf "%%%%BoundingBox: %u %u %u %u\n",
-        $self->bounding_box->[0][0],
-        $self->bounding_box->[0][1],
-        $self->bounding_box->[1][0],
-        $self->bounding_box->[1][1];
+    if ($self->bounding_box) {
+        return sprintf "%%%%BoundingBox: %u %u %u %u\n",
+            $self->bounding_box->[0][0],
+            $self->bounding_box->[0][1],
+            $self->bounding_box->[1][0],
+            $self->bounding_box->[1][1];
+    } else {
+        $self->_post_script_source_bounding_box('');
+        my (undef, $stderr) = capture { $self->render(-sDEVICE => 'bbox', -dEPSCrop => undef); };
+        {
+            my (undef, $x1, $y1, $x2, $y2) = split ' ', $stderr;
+            $self->bounding_box([[$x1, $y1], [$x2, $y2]]);
+        }
+        return $stderr;
+    }
 }
 
 sub _build__short_package_name {
@@ -115,10 +126,12 @@ sub gsapi_init_options {
         -dTextAlphaBits     => 4,
         -sDEVICE            => 'pngalpha',
         -sOutputFile        => '-',
-        sprintf('-g%ux%u',
-            $self->bounding_box->[1][0] - $self->bounding_box->[0][0],
-            $self->bounding_box->[1][1] - $self->bounding_box->[0][1]
-        )                   => \$option_is_boolean,
+        $self->bounding_box ? (
+            sprintf('-g%ux%u',
+                $self->bounding_box->[1][0] - $self->bounding_box->[0][0],
+                $self->bounding_box->[1][1] - $self->bounding_box->[0][1]
+            )               => \$option_is_boolean
+        ) : (),
     );
 
     # overwrite defaults with user supplied optlist
@@ -164,6 +177,12 @@ sub gsapi_init_options {
 
 sub render {
     my ($self, @params) = @_;
+
+    $self->post_script_source_code;
+    # Force building the dependent attributes now if they have not been built
+    # yet. This is necessary because L</post_script_source_code> is used below,
+    # after the initialisation of the GSAPI singleton. If this calls L</render>
+    # again, C<libgs> is in an invalid state and crashes.
 
     GSAPI::init_with_args(
         $self->_gsapi_instance->handle, $self->meta->name, $self->gsapi_init_options(@params),
@@ -312,7 +331,8 @@ Perl 5.10
 
 =head3 CPAN modules
 
-L<Alien::BWIPP>, L<GSAPI>, L<Moose>, L<Moose::Role>, L<Moose::Util::TypeConstraints>, L<MooseX::Singleton>
+L<Alien::BWIPP>, L<Capture::Tiny>, L<GSAPI>, L<Moose>, L<Moose::Role>,
+L<Moose::Util::TypeConstraints>, L<MooseX::Singleton>
 
 
 =head1 INCOMPATIBILITIES

@@ -29,6 +29,7 @@ my $build = Module::Build->new(
     requires => {
         'perl'              => '5.010',
         'Alien::BWIPP'      => '0.001',
+        'Capture::Tiny'     => 0,
         'GSAPI'             => '0.5',
         'Moose'             => '0.93',
         'MooseX::Singleton' => '0.22',

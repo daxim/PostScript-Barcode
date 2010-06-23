@@ -16,30 +16,6 @@ has 'version' => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Enum::qr
 has 'format'  => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Enum::qrcode::format',);
 has 'raw'     => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Bool',);
 
-sub BUILD {
-    my ($self) = @_;
-    my $size;
-    {
-        my $abc = $self->_alien_bwipp_class->new;
-        my $eclevel = $self->eclevel // 'M'; #/
-        my $smallest_symbol_version;
-        {
-            state $index = 0;
-            for (@{$abc->smallest_symbol_version->{$eclevel}}) {
-                last if $abc->smallest_symbol_version->{$eclevel}[$index] > length $self->data;
-                $index++;
-            }
-            $smallest_symbol_version = $index;
-            $smallest_symbol_version++;
-        }
-        $size = 2 * $abc->metrics->{$smallest_symbol_version}{size};
-    }
-    $self->bounding_box([[0 ,0], [
-        $size * ($self->scale ? $self->scale->[0] : 1) + ($self->translate ? $self->translate->[0] : 0),
-        $size * ($self->scale ? $self->scale->[1] : 1) + ($self->translate ? $self->translate->[1] : 0),
-    ]]);
-}
-
 1;
 
 __END__

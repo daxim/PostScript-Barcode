@@ -8,8 +8,8 @@ use Test::More tests => 6;
 
 my %test_data = (
     'PostScript::Barcode::azteccode'  => {data => '123456789012345678901234567890123456789012345678901234567890', size => [62, 62],},
-    'PostScript::Barcode::datamatrix' => {data => '123456789012345678901234567890123456789012345678901234567890', size => [48, 48],},
-    'PostScript::Barcode::qrcode'     => {data => '123456789012345678901234567890123456789012345678901234567890', size => [66, 66],},
+    'PostScript::Barcode::datamatrix' => {data => '123456789012345678901234567890123456789012345678901234567890', size => [49, 49],},
+    'PostScript::Barcode::qrcode'     => {data => '123456789012345678901234567890123456789012345678901234567890', size => [67, 67],},
 );
 
 for my $module (keys %test_data) {
