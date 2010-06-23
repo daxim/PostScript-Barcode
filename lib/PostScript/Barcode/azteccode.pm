@@ -8,7 +8,7 @@ use PostScript::Barcode::Meta::Types qw();
 
 with qw(PostScript::Barcode);
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 
 has 'parse'      => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Bool',);
 has 'eclevel'    => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Num',);
@@ -31,7 +31,7 @@ PostScript::Barcode::azteccode - Aztec Code
 
 =head1 VERSION
 
-This document describes C<PostScript::Barcode::azteccode> version C<0.003>.
+This document describes C<PostScript::Barcode::azteccode> version C<0.004>.
 
 
 =head1 SYNOPSIS
