@@ -31,6 +31,7 @@ my $build = Module::Build->new(
         'Alien::BWIPP'      => '0.001',
         'Capture::Tiny'     => 0,
         'GSAPI'             => '0.5',
+        'List::Util'        => 0,
         'Moose'             => '0.93',
         'MooseX::Singleton' => '0.22',
     },

@@ -5,6 +5,7 @@ use strict;
 use warnings FATAL => 'all';
 use Alien::BWIPP;
 use Capture::Tiny qw(capture);
+use List::Util qw(first);
 use PostScript::Barcode::GSAPI::Singleton qw();
 use Moose::Role qw(requires has);
 
@@ -124,15 +125,26 @@ sub gsapi_init_options {
         -dSAFER             => \$option_is_boolean,
         -dGraphicsAlphaBits => 4,
         -dTextAlphaBits     => 4,
-        -sDEVICE            => 'pngalpha',
         -sOutputFile        => '-',
-        $self->bounding_box ? (
-            sprintf('-g%ux%u',
-                $self->bounding_box->[1][0] - $self->bounding_box->[0][0],
-                $self->bounding_box->[1][1] - $self->bounding_box->[0][1]
-            )               => \$option_is_boolean
-        ) : (),
     );
+
+    {
+        my $device_name = @{ first(sub {$_->[0] eq '-sDEVICE'}, $self->_atomise_optlist(@params)) // [] }[1];
+        %defaults = (%defaults, -sDEVICE => 'pngalpha') unless $device_name;
+
+        no warnings 'uninitialized';
+        my $factor = {
+            epswrite => 10,
+            pdfwrite => 10,
+            svg      => 1 / 0.24,
+        }->{$device_name} // 1;
+        %defaults = (%defaults,
+            sprintf('-g%ux%u',
+                $factor * ($self->bounding_box->[1][0] - $self->bounding_box->[0][0]),
+                $factor * ($self->bounding_box->[1][1] - $self->bounding_box->[0][1])
+            ) => \$option_is_boolean
+        ) if $self->bounding_box;
+    }
 
     # overwrite defaults with user supplied optlist
     for my $atom ($self->_atomise_optlist(@params)) {
@@ -264,6 +276,12 @@ Returns EPS source code of the barcode as string.
 
     $barcode->render;
       # use defaults, see below
+    $barcode->render(-sDEVICE => 'epswrite');
+    $barcode->render(-sDEVICE => 'pdfwrite');
+    $barcode->render(-sDEVICE => 'svg');
+
+Most of the time the simple examples above are sufficient.
+
     $barcode->render(-sDEVICE => 'pnggray', -sOutputFile => 'out.png',);
       # overrides some default values
     $barcode->render(-dEPSCrop => undef, -g => undef,);
@@ -327,7 +345,7 @@ Perl 5.10, L<Module::Build>
 
 =head3 core modules
 
-Perl 5.10
+Perl 5.10, L<List::Util>
 
 =head3 CPAN modules
 
