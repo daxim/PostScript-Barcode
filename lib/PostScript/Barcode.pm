@@ -264,7 +264,9 @@ resized.
 =head3 C<bounding_box>
 
 Type C<PostScript::Barcode::Meta::Types::TuplePair>, coordinates of the EPS
-document bounding box.
+document bounding box. Default values are automatically determined through the
+Ghostscript C<bbox> device, see
+L<http://ghostscript.com/doc/current/Devices.htm#Bounding_box_output>.
 
 =head2 Methods
 
