@@ -20,8 +20,8 @@ has '_gsapi_instance' => (
 has 'data'      => (is => 'rw', isa => 'Str',           required => 1,);
 has 'pack_data' => (is => 'rw', isa => 'Bool',          default  => 1,);
 has 'move_to'   => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Tuple', default  => sub {return [0, 0];},);
-has 'translate' => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Tuple',);
-has 'scale'     => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Tuple',);
+has 'translate' => (is => 'rw', isa => 'Maybe[PostScript::Barcode::Meta::Types::Tuple]', default  => sub {return;},);
+has 'scale'     => (is => 'rw', isa => 'Maybe[PostScript::Barcode::Meta::Types::Tuple]', default  => sub {return;},);
 
 has '_post_script_source_bounding_box' => (is => 'rw', isa => 'Str',       lazy_build => 1,);
 has 'bounding_box'                     => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::TuplePair',);
@@ -255,13 +255,13 @@ document.
 
 =head3 C<translate>
 
-Type C<PostScript::Barcode::Meta::Types::Tuple>, vector by which the barcode
-position is shifted.
+Type C<Maybe[PostScript::Barcode::Meta::Types::Tuple]>, vector by which the
+barcode position is shifted. Default is C<undef>, no position shifting.
 
 =head3 C<scale>
 
-Type C<PostScript::Barcode::Meta::Types::Tuple>, vector by which the barcode is
-resized.
+Type C<Maybe[PostScript::Barcode::Meta::Types::Tuple]>, vector by which the
+barcode is resized. Default is C<undef>, no size scaling.
 
 =head3 C<bounding_box>
 
