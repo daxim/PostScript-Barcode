@@ -229,8 +229,17 @@ This document describes C<PostScript::Barcode> version C<0.004>.
 =head1 DESCRIPTION
 
 By itself alone, this role does nothing useful. Use one of the classes
-residing under this namespace.
+residing under this namespace:
 
+=over
+
+=item L<PostScript::Barcode::azteccode>
+
+=item L<PostScript::Barcode::datamatrix>
+
+=item L<PostScript::Barcode::qrcode>
+
+=back
 
 =head1 INTERFACE
 
