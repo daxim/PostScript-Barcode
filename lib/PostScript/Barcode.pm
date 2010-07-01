@@ -77,7 +77,7 @@ sub _post_script_source_appendix {
         !$_->type_constraint->equals('PostScript::Barcode::Meta::Types::Bool')
     } @own_attributes_with_value;
 
-    return sprintf "gsave %s %s %u %u moveto %s (%s) %s grestore showpage\n",
+    return sprintf "%s %s %u %u moveto %s (%s) /%s /uk.co.terryburton.bwipp findresource exec showpage\n",
         ($self->translate ? "@{$self->translate} translate" : q{}),
         ($self->scale ? "@{$self->scale} scale" : q{}),
         @{$self->move_to},
