@@ -234,6 +234,8 @@ residing under this namespace.
 
 =head1 INTERFACE
 
+See L<Moose::Manual::Types/"THE TYPES"> about the type names.
+
 =head2 Attributes
 
 =head3 C<data>
