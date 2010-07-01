@@ -6,7 +6,7 @@ use warnings FATAL => 'all';
 use GSAPI qw();
 use MooseX::Singleton qw(has);
 
-our $VERSION = '0.004';
+our $VERSION = '0.005';
 
 # new_instance returns an object of type GSAPI::instance.
 # MooseX::Singleton also has a method named "instance".
@@ -36,7 +36,7 @@ PostScript::Barcode::GSAPI::Singleton - singleton class wrapper for GSAPI
 
 =head1 VERSION
 
-This document describes C<PostScript::Barcode::GSAPI::Singleton> version C<0.004>.
+This document describes C<PostScript::Barcode::GSAPI::Singleton> version C<0.005>.
 
 
 =head1 SYNOPSIS

@@ -8,7 +8,7 @@ use PostScript::Barcode::Meta::Types qw();
 
 with qw(PostScript::Barcode);
 
-our $VERSION = '0.004';
+our $VERSION = '0.005';
 
 has 'parse'   => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Bool',);
 has 'eclevel' => (is => 'rw', isa => 'PostScript::Barcode::Meta::Types::Enum::qrcode::eclevel',);
@@ -29,7 +29,7 @@ PostScript::Barcode::qrcode - QR code
 
 =head1 VERSION
 
-This document describes C<PostScript::Barcode::qrcode> version C<0.004>.
+This document describes C<PostScript::Barcode::qrcode> version C<0.005>.
 
 
 =head1 SYNOPSIS

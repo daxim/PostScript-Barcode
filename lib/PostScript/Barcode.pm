@@ -9,7 +9,7 @@ use List::Util qw(first);
 use PostScript::Barcode::GSAPI::Singleton qw();
 use Moose::Role qw(requires has);
 
-our $VERSION = '0.004';
+our $VERSION = '0.005';
 
 has '_gsapi_instance' => (
     is      => 'ro',
@@ -218,7 +218,7 @@ PostScript::Barcode - barcode writer
 
 =head1 VERSION
 
-This document describes C<PostScript::Barcode> version C<0.004>.
+This document describes C<PostScript::Barcode> version C<0.005>.
 
 
 =head1 SYNOPSIS

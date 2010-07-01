@@ -4,6 +4,14 @@
 
 Changes - Revision history for PostScript-Barcode
 
+=head2 0.005  2010-07-01
+
+=item require latest version of L<Alien::BWIPP>
+
+=item relax attributes C<scale> and C<translate>, backwards compatible
+
+=item some documentation improvements
+
 =head2 0.004  2010-06-23
 
 =over
