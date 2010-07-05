@@ -4,7 +4,7 @@ use utf8;
 use strict;
 use warnings FATAL => 'all';
 use Alien::BWIPP;
-use Capture::Tiny qw(capture);
+use IO::CaptureOutput qw(capture);
 use List::Util qw(first);
 use PostScript::Barcode::GSAPI::Singleton qw();
 use Moose::Role qw(requires has);
@@ -44,7 +44,8 @@ sub _build__post_script_source_bounding_box {
             $self->bounding_box->[1][1];
     } else {
         $self->_post_script_source_bounding_box('');
-        my (undef, $stderr) = capture { $self->render(-sDEVICE => 'bbox', -dEPSCrop => undef); };
+        my $stderr;
+        capture { $self->render(-sDEVICE => 'bbox', -dEPSCrop => undef); } undef, \$stderr;
         {
             my (undef, $x1, $y1, $x2, $y2) = split ' ', $stderr;
             $self->bounding_box([[$x1, $y1], [$x2, $y2]]);
@@ -362,7 +363,7 @@ Perl 5.10, L<List::Util>
 
 =head3 CPAN modules
 
-L<Alien::BWIPP>, L<Capture::Tiny>, L<GSAPI>, L<Moose>, L<Moose::Role>,
+L<Alien::BWIPP>, L<IO::CaptureOutput>, L<GSAPI>, L<Moose>, L<Moose::Role>,
 L<Moose::Util::TypeConstraints>, L<MooseX::Singleton>
 
 
