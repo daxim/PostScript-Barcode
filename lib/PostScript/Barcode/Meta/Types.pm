@@ -5,7 +5,7 @@ use strict;
 use warnings FATAL => 'all';
 use Moose::Util::TypeConstraints qw(enum subtype as where);
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 enum 'PostScript::Barcode::Meta::Types::Enum::azteccode::format'    => qw(full compact rune);
 enum 'PostScript::Barcode::Meta::Types::Enum::datamatrix::encoding' => qw(byte ascii edifact c40 text x12);
@@ -30,7 +30,7 @@ PostScript::Barcode::Meta::Types - extended type constraints
 
 =head1 VERSION
 
-This document describes C<PostScript::Barcode::Meta::Types> version C<0.005>.
+This document describes C<PostScript::Barcode::Meta::Types> version C<0.006>.
 
 
 =head1 SYNOPSIS

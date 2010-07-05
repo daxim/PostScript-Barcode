@@ -4,13 +4,22 @@
 
 Changes - Revision history for PostScript-Barcode
 
+=head2 0.006  2010-07-05
+
+work around a bug that occurs when capturing STDERR which exhibits under
+mod_perl and for which it is difficult to find a minimal test case
+
 =head2 0.005  2010-07-01
+
+=over
 
 =item require latest version of L<Alien::BWIPP>
 
 =item relax attributes C<scale> and C<translate>, backwards compatible
 
 =item some documentation improvements
+
+=back
 
 =head2 0.004  2010-06-23
 
